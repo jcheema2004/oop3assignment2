@@ -8,7 +8,7 @@ import exceptions.EmptyQueueException;
  *
  * @param <E> The type of elements stored in this queue.
  *
- * @author Your Group
+ * @author Group 9
  * @version 1.0
  */
 public interface QueueADT<E> extends Iterable<E> {
