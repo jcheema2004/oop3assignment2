@@ -14,7 +14,7 @@ import utilities.Iterator;
  * 
  * @param <E> The type of elements stored in this list.
  *
- * Group 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * GROUP 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
  * DATE: 2025/11/22
  */
 public class MyArrayList<E> implements ListADT<E> {

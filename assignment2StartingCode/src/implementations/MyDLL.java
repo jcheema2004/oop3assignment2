@@ -10,7 +10,7 @@ import java.util.Arrays;
  * Doubly Linked List implementation of the ListADT interface.
  * Stores elements in nodes with previous and next references.
  * 
- * Group 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * GROUP 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
  * DATE: 2025/11/22
  */
 
