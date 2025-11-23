@@ -6,6 +6,15 @@ import exceptions.EmptyQueueException;
 import java.util.NoSuchElementException;
 import java.util.Arrays;
 
+/**
+ * FILE: MyQueue.java
+ * DESCRIPTION:
+ * A queue implementation backed by a doubly linked list (MyDLL).
+ *
+ * GROUP 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * DATE: 2025/11/22
+ */
+
 public class MyQueue<E> implements QueueADT<E> {
 	
 	private MyDLL<E> list;
@@ -38,7 +47,7 @@ public class MyQueue<E> implements QueueADT<E> {
 			
 		}
 		
-		return list.remove(0);
+		return list.remove(0); // FIFO → remove from front
 		
 	}
 
@@ -51,7 +60,7 @@ public class MyQueue<E> implements QueueADT<E> {
 			
 		}
 		
-		return list.get(0);
+		return list.get(0); // Front element only
 		
 	}
 

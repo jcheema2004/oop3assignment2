@@ -1,4 +1,10 @@
 package implementations;
+/**
+ * FILE: MyDLLNode.java
+ * 
+ * Group 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * DATE: 2025/11/22
+ */
 
 public class MyDLLNode<E> {
 	

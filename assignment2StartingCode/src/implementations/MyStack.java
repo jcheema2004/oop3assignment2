@@ -6,6 +6,18 @@ import java.util.EmptyStackException;
 import java.util.NoSuchElementException;
 import java.util.Arrays;
 
+/**
+ * 
+ * FILE: MyStack.java
+ * 
+ * DESCRIPTION:
+ * Implementation of the StackADT interface using a dynamic
+ * MyArrayList as the underlying data structure. 
+ *
+ * GROUP 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * DATE: 2025/11/22
+ */
+
 public class MyStack<E> implements StackADT<E> {
 		
 	private MyArrayList<E> list;
@@ -25,7 +37,7 @@ public class MyStack<E> implements StackADT<E> {
 			
 		}
 		
-		list.add(toAdd);
+		list.add(toAdd); // Push to top (end of ArrayList)
 		
 	}
 
@@ -38,7 +50,7 @@ public class MyStack<E> implements StackADT<E> {
 			
 		}
 		
-		return list.remove(list.size() - 1);
+		return list.remove(list.size() - 1); // Remove from top
 	}
 
 	@Override
@@ -50,7 +62,7 @@ public class MyStack<E> implements StackADT<E> {
 			
 		}
 		
-		return list.get(list.size() - 1);
+		return list.get(list.size() - 1); // Return top element
 		
 	}
 
@@ -94,7 +106,7 @@ public class MyStack<E> implements StackADT<E> {
 			
 		}
 		
-		Object[] stackArray = toArray();
+		Object[] stackArray = toArray(); // Already reversed (top → bottom)
 		
 		if(holder.length < stackArray.length) {
 			
@@ -128,6 +140,7 @@ public class MyStack<E> implements StackADT<E> {
 	@Override
 	public int search(E toFind) {
 		
+		// Position is 1-based from the top
 		for (int i = list.size() - 1, position = 1; i >= 0; i--, position++) {
 			
 			if (toFind.equals(list.get(i))) {
@@ -178,13 +191,14 @@ public class MyStack<E> implements StackADT<E> {
 		
 	}
 	
+    // Iterator Class — iterates from top (last index) downward
 	private class StackIterator implements Iterator<E>{
 		
 		private int currentIndex;
 		
 		public StackIterator() {
 			
-			currentIndex = list.size() -1; 
+			currentIndex = list.size() -1;  // Start at top
 			
 		}
 		
