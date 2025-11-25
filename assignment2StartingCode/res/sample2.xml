@@ -5,7 +5,7 @@
 		<Driver FolderName="driver001">
 			<Language LanguageName="Basque">
 				<PackageCreationLocation FolderName="D:\Document\Product\PL2303\WHQL\Driver\V1.5.0.0"/>
-				<b>This is for the Spanish<i> Language that is </b> long ago lost.</i>
+				<b>This is for the Spanish <i> Language that is </b> long ago lost.</i>
 			</Language>
 			<Language LanguageName="Brazilian">
 				<PackageCreationLocation FolderName="D:\Document\Product\PL2303\WHQL\Driver\V1.5.0.0"/>

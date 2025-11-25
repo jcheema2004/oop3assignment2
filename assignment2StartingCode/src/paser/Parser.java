@@ -1,5 +1,9 @@
 package paser;
+
 import implementations.MyStack;
+import implementations.MyQueue;
+// IMPORT: This must match the exception thrown by your MyQueue.dequeue()
+import exceptions.EmptyQueueException; 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,19 +15,24 @@ import java.util.regex.Pattern;
  * FILE: Parser.java
  * DESCRIPTION:
  * Main application class to read an XML file from the command line,
- * validate its structure using a MyStack, and report errors.
- *
- * NOTE: Adjust the import statements for MyStack based on your project structure.
+ * validate its structure using a MyStack, and report errors using a MyQueue.
  */
 public class Parser {
 
     private static final String TAG_REGEX = 
-        "(<\\?.*?\\?>)|(<[a-zA-Z0-9]+ *[^/>]*?>)|(</[a-zA-Z0-9]+>)|(<[a-zA-Z0-9]+ *[^>]*?/\\s*>)";
+        // 1. Processing Instruction: <?xml ... ?>
+        "(<\\?.*?\\?>)|" + 
+        // 2. Opening Tag (potentially with attributes): <tag attr="value">
+        "(<[a-zA-Z0-9]+ *[^/>]*?>)|" + 
+        // 3. Closing Tag: </tag>
+        "(</[a-zA-Z0-9]+>)|" + 
+        // 4. Self-Closing Tag: <tag/>
+        "(<[a-zA-Z0-9]+ *[^>]*?/\\s*>)";
     
     private static final Pattern TAG_PATTERN = Pattern.compile(TAG_REGEX);
     
-    // To store errors and print them in order
-    private static MyStack<String> errorStack = new MyStack<>();
+    // Using MyQueue to store errors in the order they occur (FIFO)
+    private static MyQueue<String> errorQueue = new MyQueue<>();
     
     public static void main(String[] args) {
         
@@ -54,21 +63,16 @@ public class Parser {
                     String fullTag = matcher.group();
                     String tagName = extractTagName(fullTag);
 
-                    if (isProcessingInstruction(fullTag)) {
-                        // Ignore processing instructions (e.g., <?xml version="1.0"?>)
+                    if (isProcessingInstruction(fullTag) || isSelfClosing(fullTag)) {
+                        // Ignore processing instructions and self-closing tags
                         continue;
                     }
                     
-                    if (isSelfClosing(fullTag)) {
-                        // Ignore self-closing tags (e.g., <br/>)
-                        continue;
-                    }
-
                     if (isOpeningTag(fullTag)) {
                         
-                        // Check for root tag rule
+                        // Rule: one and only one root tag.
                         if (tagStack.isEmpty() && hasRoot) {
-                            addError(lineCount, fullTag, "Found more than one root tag.");
+                            addError(lineCount, fullTag, "Found more than one top-level root element.");
                         } else if (tagStack.isEmpty() && !hasRoot) {
                             hasRoot = true;
                         }
@@ -82,12 +86,12 @@ public class Parser {
                         try {
                             String expectedTag = tagStack.pop();
                             
-                            // Check for intercrossing or mismatch
+                            // Check for mismatched tags or intercrossing
                             if (!tagName.equals(expectedTag)) {
                                 addError(lineCount, fullTag, "Mismatched closing tag. Expected </" + expectedTag + ">.");
                             }
                         } catch (EmptyStackException e) {
-                            // Stack is empty, but we found a closing tag
+                            // Closing tag found with no corresponding opening tag
                             addError(lineCount, fullTag, "Closing tag found with no corresponding opening tag.");
                         }
                     }
@@ -98,11 +102,11 @@ public class Parser {
             
             // 1. Check for unclosed tags
             while (!tagStack.isEmpty()) {
-                // Since we don't know the exact line of the error, we report the open tag
-                addError(-1, "<" + tagStack.pop() + ">", "Opening tag never closed.");
+                String unclosedTag = tagStack.pop();
+                addError(-1, "<" + unclosedTag + ">", "Opening tag never closed.");
             }
             
-            // 2. Check for missing root (only if no other errors caused premature stack pops)
+            // 2. Final check for missing root 
             if (!hasRoot) {
                  addError(-1, "", "XML document must have exactly one root tag.");
             }
@@ -154,7 +158,7 @@ public class Parser {
     }
     
     /**
-     * Stores the error message to be reported later.
+     * Stores the error message to be reported later using the MyQueue (FIFO).
      */
     private static void addError(int lineNumber, String tag, String message) {
         String error;
@@ -163,26 +167,27 @@ public class Parser {
         } else {
              error = String.format("Error on line %d: %s [Tag: %s]", lineNumber, message, tag);
         }
-        // Push errors onto the stack to reverse the order for printing later (FIFO requirement)
-        errorStack.push(error);
+        // Enqueue errors to preserve the order they occurred (FIFO)
+        errorQueue.enqueue(error);
     }
     
     /**
-     * Prints all errors in the order they occurred.
+     * Prints all errors in the order they occurred by dequeuing from the MyQueue.
      */
     private static void reportErrors() {
-        if (errorStack.isEmpty()) {
-            System.out.println("\n✅ XML Document is PROPERLY CONSTRUCTED.");
+        if (errorQueue.isEmpty()) {
+            System.out.println("\nXML document is constructed correctly.");
         } else {
             System.out.println("\n❌ XML Document is NOT properly constructed. Errors found:");
-            // Use another stack to reverse the order of errors for printing
-            MyStack<String> printStack = new MyStack<>();
-            while(!errorStack.isEmpty()) {
-                printStack.push(errorStack.pop());
-            }
-
-            while (!printStack.isEmpty()) {
-                System.out.println(printStack.pop());
+            
+            // Dequeue and print errors directly in FIFO order.
+            while (!errorQueue.isEmpty()) { 
+                try {
+                    System.out.println(errorQueue.dequeue());
+                } catch (EmptyQueueException e) { // <-- FIX APPLIED HERE
+                    // The while loop condition should prevent this, but it handles the exception thrown by your ADT.
+                    break; 
+                }
             }
         }
         System.out.println("\n--- Validation Complete ---");
