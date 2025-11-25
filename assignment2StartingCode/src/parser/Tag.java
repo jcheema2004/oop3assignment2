@@ -1,6 +1,13 @@
 package parser;
 
-
+/**
+ * FILE: Tag.java
+ * 
+ * Tag class
+ *
+ * GROUP 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * DATE: 2025/11/24
+ */
 
 public class Tag {
     final String name;

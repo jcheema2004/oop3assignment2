@@ -13,7 +13,12 @@ import java.util.regex.Pattern;
 import java.util.Set;
 
 /**
- *  XMLParser
+ * FILE: XMLParser.java
+ * 
+ * XML Parser Logic
+ *
+ * GROUP 9: Jasmine Cheema, Monica Leung, Precious Robert-Ezenta, Mitali Vaid
+ * DATE: 2025/11/24
  */
 public class XMLParser {
 
